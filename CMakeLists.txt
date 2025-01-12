@@ -34,3 +34,4 @@ project(p2sv C CXX ASM)
 pico_sdk_init()
 
 add_subdirectory(libs)
+add_subdirectory(p2sv)
