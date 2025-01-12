@@ -16,3 +16,7 @@ Audio signals need level shift to positve voltage for input to ADC.
 Used this simple circuit to do so:
 
 <img src="docs/audio_adc_level.png">
+
+## SDK version
+
+This projectd uses Pico SDK 2.1.0.
