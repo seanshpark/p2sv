@@ -1,2 +1,18 @@
 # p2sv
-Audio spectrum visualizer with Raspberry Pi pico 2
+
+`p2sv` is simple project to use Raspberry Pi pico 2 as an audio spectrum visualizer.
+
+`p2sv` uses [kissfft](https://github.com/mborgerding/kissfft) for as FFT and
+some algorithms from [cava](https://github.com/karlstav/cava) to get basic visualization.
+
+Two ADCs are used to digitize stereo audio signals with about 44.1KHz sampling rate.
+
+Test connection on breadboard: 
+
+<img src="docs/p2sv_capture.png">
+
+Audio signals need level shift to positve voltage for input to ADC.
+
+Used this simple circuit to do so:
+
+<img src="docs/audio_adc_level.png">
