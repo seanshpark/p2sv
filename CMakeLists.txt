@@ -32,3 +32,5 @@ project(p2sv C CXX ASM)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
+
+add_subdirectory(libs)
