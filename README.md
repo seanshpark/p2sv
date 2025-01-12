@@ -17,6 +17,10 @@ Used this simple circuit to do so:
 
 <img src="docs/audio_adc_level.png">
 
+Youtube demo video:
+
+[![demo video](http://i.ytimg.com/vi/k9Akgbx1h0w/hqdefault.jpg)](https://www.youtube.com/watch?v=k9Akgbx1h0w)
+
 ## SDK version
 
 This projectd uses Pico SDK 2.1.0.
