@@ -1,0 +1,3 @@
+[submodule "libs/kissfft"]
+	path = libs/kissfft
+	url = https://github.com/seanshpark/kissfft.git
