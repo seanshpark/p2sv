@@ -33,34 +33,6 @@ bool alaram_repeating_cb(repeating_timer_t *rt)
 
 //------------------------------------------------------------------------------
 
-void fft_to_bars(p2sv::FFT &fft, int dim, p2sv::Bars &bars, float *out)
-{
-  int num_bars = bars.num();
-  int sample_half = N_SAMPLE / 2;
-  for (int i = 0; i < sample_half; ++i)
-  {
-    float freq = bars.freq(i);
-    float power = fft.output(i);
-    for (int b = 0; b < num_bars; ++b)
-    {
-      if (bars.freq_l(b) <= freq && freq < bars.freq_h(b))
-      {
-        bars.acc(b, power);
-        break;
-      }
-    }
-  }
-
-  for (int b = 0; b < num_bars; ++b)
-  {
-    float amp = sqrtf(bars.amp(b));
-    amp *= bars.equalize(b) / (bars.freq_h(b) - bars.freq_l(b) + 1);
-    out[b] = amp * dim;
-  }
-}
-
-//------------------------------------------------------------------------------
-
 int main(void)
 {
   p2sv::System sys;
@@ -95,7 +67,7 @@ int main(void)
   // show info
   lcd1602.puts("RPi pico 2");
   lcd1602.move(1, 0);
-  lcd1602.puts("SpecVis 0.1.0");
+  lcd1602.puts("SpecVis 0.2.0");
   sleep_ms(2000);
 
   // blinking on-board LED to show alive
@@ -123,9 +95,10 @@ int main(void)
     fft_l.run();
     fft_r.run();
 
-    bars.reset();
-    fft_to_bars(fft_l, LCD1602_NUM_LEVELS, bars, bars.left());
-    fft_to_bars(fft_r, LCD1602_NUM_LEVELS, bars, bars.right());
+    bars.fft2amp(fft_l.output());
+    bars.equalize(bars.left());
+    bars.fft2amp(fft_r.output());
+    bars.equalize(bars.right());
 
     bars.mergeCenter();
     bars.toDisplay(LCD1602_NUM_LEVELS);

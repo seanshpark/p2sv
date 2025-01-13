@@ -71,24 +71,48 @@ void Bars::final(void)
   delete _cut_off_freq;
 }
 
-int Bars::freq_l(int bar)
+int Bars::freqLo(int bar)
 {
   if (0 <= bar && bar < _num_bars)
     return _cut_off_freq[bar];
   return _cutoff_low;
 }
 
-int Bars::freq_h(int bar)
+int Bars::freqHi(int bar)
 {
   if (0 <= bar && bar < _num_bars)
     return _cut_off_freq[bar + 1];
   return _cutoff_high;
 }
 
-void Bars::reset(void)
+void Bars::fft2amp(float *fft)
 {
-  for (int n = 0; n < _num_bars; ++n)
-    _amplitudes[n] = 0.0f;
+  for (int b = 0; b < _num_bars; ++b)
+    _amplitudes[b] = 0.0f;
+
+  int sample_half = N_SAMPLE / 2;
+  for (int i = 0; i < sample_half; ++i)
+  {
+    float freq = _freq_idx[i];
+    float power = fft[i];
+    for (int b = 0; b < _num_bars; ++b)
+    {
+      if (freqLo(b) <= freq && freq < freqHi(b))
+      {
+        _amplitudes[b] += power;
+        break;
+      }
+    }
+  }
+}
+
+void Bars::equalize(float *out)
+{
+  for (int b = 0; b < _num_bars; ++b)
+  {
+    float amp = sqrtf(_amplitudes[b]);
+    out[b] = amp * _equalize[b] / (freqHi(b) - freqLo(b) + 1);
+  }
 }
 
 // merge left+right as low freq in center
@@ -110,7 +134,7 @@ void Bars::toDisplay(uint16_t num_levels)
       _bars_val[n] = 0;
     else
     {
-      _bars_val[n] = (uint16_t)_bars_raw[n];
+      _bars_val[n] = (uint16_t)(_bars_raw[n] * num_levels);
       if (_bars_val[n] > num_levels)
         _bars_val[n] = num_levels;
     }

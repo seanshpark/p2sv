@@ -13,21 +13,17 @@ public:
   void final(void);
 
 public:
-  void reset(void);
-  void acc(int bar, float amp) { _amplitudes[bar] += amp; }
+  void fft2amp(float *fft);
+  void equalize(float *out);
   void mergeCenter(void);
   void toDisplay(uint16_t num_levels);
 
 public:
-  int freq_l(int bar);
-  int freq_h(int bar);
+  int freqLo(int bar);
+  int freqHi(int bar);
 
   int num(void) { return _num_bars; }
   int total(void) { return _total_bars; }
-
-  float freq(int sample) { return _freq_idx[sample]; }
-  float amp(int bar) { return _amplitudes[bar]; }
-  float equalize(int bar) { return _equalize[bar]; }
 
   float *left(void) { return _bars_left; }
   float *right(void) { return _bars_right; }
