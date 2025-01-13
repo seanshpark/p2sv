@@ -33,12 +33,11 @@ bool alaram_repeating_cb(repeating_timer_t *rt)
 
 //------------------------------------------------------------------------------
 
-void fft_to_bars(p2sv::FFT &fft, p2sv::Bars &bars, int dim, float *out)
+void fft_to_bars(p2sv::FFT &fft, int dim, p2sv::Bars &bars, float *out)
 {
-  bars.reset();
-
   int num_bars = bars.num();
-  for (int i = 0; i < N_SAMPLE / 2; ++i)
+  int sample_half = N_SAMPLE / 2;
+  for (int i = 0; i < sample_half; ++i)
   {
     float freq = bars.freq(i);
     float power = fft.output(i);
@@ -90,7 +89,7 @@ int main(void)
   fft_l.init();
   fft_r.init();
   proc.init();
-  bars.init(SAMPLE_RATE, LCD1602_BARS_CHN, 100, 15000);
+  bars.init(SAMPLE_RATE, N_SAMPLE, LCD1602_BARS_CHN, 100, 15000);
   sys.info();
 
   // show info
@@ -106,25 +105,6 @@ int main(void)
   ud.pgpio = &gpio;
   ud.led = true;
   alarm_pool_add_repeating_timer_ms(pool, 500, alaram_repeating_cb, &ud, &rt);
-
-  float *bars_left;
-  float *bars_right;
-  float *bars_raw;
-  uint16_t *bars_val;
-
-  int output_channels = 2;
-  int num_bar_per_chn = bars.num();
-  int number_of_bars = num_bar_per_chn * output_channels;
-
-  bars_left = (float *)malloc(sizeof(float) * num_bar_per_chn);
-  bars_right = (float *)malloc(sizeof(float) * num_bar_per_chn);
-  memset(bars_left, 0, sizeof(float) * num_bar_per_chn);
-  memset(bars_right, 0, sizeof(float) * num_bar_per_chn);
-
-  bars_raw = (float *)malloc(sizeof(float) * number_of_bars);
-  bars_val = (uint16_t *)malloc(sizeof(uint16_t) * number_of_bars);
-  memset(bars_raw, 0, sizeof(float) * number_of_bars);
-  memset(bars_val, 0, sizeof(uint16_t) * number_of_bars);
 
   while (true)
   {
@@ -143,27 +123,14 @@ int main(void)
     fft_l.run();
     fft_r.run();
 
-    fft_to_bars(fft_l, bars, LCD1602_NUM_LEVELS, bars_left);
-    fft_to_bars(fft_r, bars, LCD1602_NUM_LEVELS, bars_right);
+    bars.reset();
+    fft_to_bars(fft_l, LCD1602_NUM_LEVELS, bars, bars.left());
+    fft_to_bars(fft_r, LCD1602_NUM_LEVELS, bars, bars.right());
 
-    int number_of_bars_half = number_of_bars / 2;
-    for (int n = 0; n < number_of_bars_half; n++)
-      bars_raw[n] = bars_left[number_of_bars / 2 - n - 1];
-    for (int n = number_of_bars_half; n < number_of_bars; n++)
-      bars_raw[n] = bars_right[n - number_of_bars / 2];
+    bars.mergeCenter();
+    bars.toDisplay(LCD1602_NUM_LEVELS);
 
-    for (int n = 0; n < number_of_bars; n++)
-    {
-      if (bars_raw[n] < 0.0)
-        bars_val[n] = 0;
-      else
-      {
-        bars_val[n] = (uint16_t)bars_raw[n];
-        if (bars_val[n] > LCD1602_NUM_LEVELS)
-          bars_val[n] = LCD1602_NUM_LEVELS;
-      }
-    }
-    lcd1602.level(bars_val);
+    lcd1602.level(bars.display());
   }
 
   return 0;

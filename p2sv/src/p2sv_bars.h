@@ -1,26 +1,38 @@
 #ifndef __P2SV_BARS_H__
 #define __P2SV_BARS_H__
 
+#include <cstdint>
+
 namespace p2sv
 {
 
 class Bars
 {
 public:
-  void init(int rate, int num, int low, int high);
+  void init(int rate, int samples, int num, int low, int high);
   void final(void);
+
+public:
+  void reset(void);
+  void acc(int bar, float amp) { _amplitudes[bar] += amp; }
+  void mergeCenter(void);
+  void toDisplay(uint16_t num_levels);
 
 public:
   int freq_l(int bar);
   int freq_h(int bar);
 
   int num(void) { return _num_bars; }
-  float freq(int sample) { return _freq_idx[sample]; }
+  int total(void) { return _total_bars; }
 
-  void reset(void);
-  void acc(int bar, float amp) { _amplitudes[bar] += amp; }
+  float freq(int sample) { return _freq_idx[sample]; }
   float amp(int bar) { return _amplitudes[bar]; }
   float equalize(int bar) { return _equalize[bar]; }
+
+  float *left(void) { return _bars_left; }
+  float *right(void) { return _bars_right; }
+  float *merged(void) { return _bars_raw; }
+  uint16_t *display(void) { return _bars_val; }
 
 private:
   int _sample_rate = 0;
@@ -31,6 +43,14 @@ private:
   float *_amplitudes = nullptr;
   float *_freq_idx = nullptr;
   float *_equalize = nullptr;
+
+  int _total_bars = 0;
+  float *_bars_left = nullptr;
+  float *_bars_right = nullptr;
+  float *_bars_raw = nullptr;
+
+  // for display
+  uint16_t *_bars_val = nullptr;
 };
 
 } // namespace p2sv

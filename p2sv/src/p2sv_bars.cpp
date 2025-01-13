@@ -3,11 +3,12 @@
 
 #include <cmath>
 #include <cstdio>
+#include <cstring>
 
 namespace p2sv
 {
 
-void Bars::init(int rate, int num, int low, int high)
+void Bars::init(int rate, int samples, int num, int low, int high)
 {
   int num_bars_1 = num + 1;
 
@@ -33,16 +34,37 @@ void Bars::init(int rate, int num, int low, int high)
   }
 
   // cache fft index to frequency
-  _freq_idx = new float[N_SAMPLE];
-  for (int n = 0; n < N_SAMPLE; ++n)
-    _freq_idx[n] = (float)_sample_rate * (float)n / N_SAMPLE;
+  _freq_idx = new float[samples];
+  for (int n = 0; n < samples; ++n)
+    _freq_idx[n] = (float)_sample_rate * (float)n / samples;
 
   // buffer to accumulate powers
   _amplitudes = new float[num_bars_1];
+
+  // bars for level
+  int output_channels = 2;
+  int num_bar_per_chn = _num_bars;
+
+  _total_bars = num_bar_per_chn * output_channels;
+
+  _bars_left = (float *)malloc(sizeof(float) * num_bar_per_chn);
+  _bars_right = (float *)malloc(sizeof(float) * num_bar_per_chn);
+  memset(_bars_left, 0, sizeof(float) * num_bar_per_chn);
+  memset(_bars_right, 0, sizeof(float) * num_bar_per_chn);
+
+  _bars_raw = (float *)malloc(sizeof(float) * _total_bars);
+  memset(_bars_raw, 0, sizeof(float) * _total_bars);
+
+  _bars_val = (uint16_t *)malloc(sizeof(uint16_t) * _total_bars);
+  memset(_bars_val, 0, sizeof(uint16_t) * _total_bars);
 }
 
 void Bars::final(void)
 {
+  delete _bars_val;
+  delete _bars_raw;
+  delete _bars_right;
+  delete _bars_left;
   delete _amplitudes;
   delete _freq_idx;
   delete _equalize;
@@ -67,6 +89,32 @@ void Bars::reset(void)
 {
   for (int n = 0; n < _num_bars; ++n)
     _amplitudes[n] = 0.0f;
+}
+
+// merge left+right as low freq in center
+// - Left(H,M,L)(L,M,H)Right
+// - H:High, M:Middle, L:Low
+void Bars::mergeCenter(void)
+{
+  for (int n = 0; n < _num_bars; n++)
+    _bars_raw[n] = _bars_left[_num_bars - n - 1];
+  for (int n = _num_bars; n < _total_bars; n++)
+    _bars_raw[n] = _bars_left[n - _num_bars];
+}
+
+void Bars::toDisplay(uint16_t num_levels)
+{
+  for (int n = 0; n < _total_bars; n++)
+  {
+    if (_bars_raw[n] < 0.0)
+      _bars_val[n] = 0;
+    else
+    {
+      _bars_val[n] = (uint16_t)_bars_raw[n];
+      if (_bars_val[n] > num_levels)
+        _bars_val[n] = num_levels;
+    }
+  }
 }
 
 } // namespace p2sv
