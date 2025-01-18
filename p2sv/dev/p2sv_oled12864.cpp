@@ -457,7 +457,6 @@ void OLED12864::draw_fast_vline_internal(int16_t x, int16_t __y, int16_t __h, ui
   } // endif x in bounds
 }
 
-
 void OLED12864::splash(void)
 {
   // TODO
@@ -479,17 +478,15 @@ void OLED12864::level_loop(uint16_t *bars)
     bar w : 4px -> in 128px -> 16 bars / ch
     bar h : 1px -> in  32px -> 32 levels
   */
-
-  uint16_t lev;
-  uint16_t x0, x1, yy;
-  for (uint16_t b = 0; b < 32; ++b)
+  const uint16_t nb = OLED12864_BARS_CHN * 2;
+  for (uint16_t b = 0; b < nb; ++b)
   {
-    lev = bars[b];
+    auto lev = bars[b];
     for (uint16_t l = 0; l < lev; ++l)
     {
-      yy = 63 - l;
-      x0 = b * 4;
-      x1 = x0 + 2;
+      uint16_t yy = 48 - l;
+      uint16_t x0 = b * 4;
+      uint16_t x1 = x0 + 2;
       draw_line(x0, yy, x1, yy, 1);
     }
   }
