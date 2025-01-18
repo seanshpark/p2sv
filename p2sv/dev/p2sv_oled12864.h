@@ -90,9 +90,11 @@ private:
   uint32_t _temp_size = 0;
   bool _initalized = false;
 
+#if 0
 public:
   void test_init(void);
   void test_loop(void);
+#endif // 0
 
 private:
   uint16_t _test_c = 0;

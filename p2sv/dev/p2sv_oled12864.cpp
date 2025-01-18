@@ -500,6 +500,8 @@ std::unique_ptr<p2sv::Display> create_display(void)
 
 } // namespace p2sv
 
+#if 0
+
 namespace p2sv
 {
 
@@ -550,3 +552,5 @@ void OLED12864::test_loop(void)
 }
 
 } // namespace p2sv
+
+#endif // 0
