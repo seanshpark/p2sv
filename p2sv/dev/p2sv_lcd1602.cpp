@@ -46,6 +46,8 @@ namespace
 
 // clang-format on
 
+#define LCD_I2C_ADDR 0x27
+
 } // namespace
 
 namespace p2sv
@@ -68,6 +70,7 @@ uint8_t _cgfont8[8] = {0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f};
 void LCD1602::init(I2C *i2c)
 {
   _i2c = i2c;
+  _i2c->init(LCD_I2C_ADDR);
 
   _display = true;
   _cursor = false;
@@ -114,6 +117,15 @@ void LCD1602::init(I2C *i2c)
   _initalized = true;
 
   clear();
+}
+
+void LCD1602::splash(void)
+{
+  puts("RPi pico 2");
+  move(1, 0);
+  puts("SpecVis ");
+  puts(P2SV_VERSION_STRING);
+  sleep_ms(2000);
 }
 
 void LCD1602::clear()
@@ -203,11 +215,16 @@ void LCD1602::cgram(uint8_t ch, uint8_t *data, size_t leng)
   }
 }
 
+void LCD1602::level_init(void)
+{
+  // for one time init
+}
+
 /*
   Draw bars to LCD1602 
   'bars' must have 16 items with value of 0 ~ 16
 */
-void LCD1602::level(uint16_t *bars)
+void LCD1602::level_loop(uint16_t *bars)
 {
   uint16_t num = 16;
   char row0[20];

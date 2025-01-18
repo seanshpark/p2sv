@@ -16,7 +16,7 @@ public:
   void fft2amp(float *fft);
   void equalize(float *out);
   void mergeCenter(void);
-  void toDisplay(uint16_t num_levels);
+  void generate(uint16_t num_levels);
 
 public:
   int freqLo(int bar);

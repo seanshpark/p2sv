@@ -26,6 +26,7 @@ set(P2SV_SRC_FILES
 )
 
 add_executable(p2sv ${P2SV_SRC_FILES} ${P2SV_DEV_FILES})
+add_definitions(-DP2SV_VERSION_STRING="0.3.0")
 
 pico_set_program_name(p2sv "p2sv")
 pico_set_program_version(p2sv "0.3.0")

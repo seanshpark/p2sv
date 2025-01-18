@@ -2,6 +2,7 @@
 #define __P2SV_LCD1602_H__
 
 #include "p2sv_sys.h"
+#include "p2sv_display.h"
 #include "p2sv_i2c.h"
 
 #define LCD1602_NUM_LEVELS 16
@@ -10,10 +11,15 @@
 namespace p2sv
 {
 
-class LCD1602
+class LCD1602 : public Display
 {
 public:
-  void init(I2C *i2c);
+  void init(I2C *i2c) override;
+  void splash(void) override;
+
+public:
+  uint16_t num_bars_per_chn(void) override { return LCD1602_BARS_CHN; }
+  uint16_t num_levels(void) override { return LCD1602_NUM_LEVELS; };
 
 public:
   void clear();
@@ -26,7 +32,8 @@ public:
   void move(uint8_t row, uint8_t col);
   void cgram(uint8_t ch, uint8_t *data, size_t leng);
 
-  void level(uint16_t *bars);
+  void level_init(void) override;
+  void level_loop(uint16_t *) override;
 
 private:
   void function_set(uint8_t data);

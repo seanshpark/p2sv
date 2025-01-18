@@ -19,8 +19,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstring>
-
-#include <memory.h>
+#include <memory>
 
 struct rcb_ud_t
 {
@@ -36,6 +35,16 @@ bool alaram_repeating_cb(repeating_timer_t *rt)
   ud->led = not ud->led;
 
   return true;
+}
+
+std::unique_ptr<p2sv::Display> display_factory(void)
+{
+#if defined(P2SV_DISPLAY_LCD1602)
+  return std::make_unique<p2sv::LCD1602>();
+#endif
+#if defined(P2SV_DISPLAY_OLED12864)
+  return std::make_unique<p2sv::OLED12864>();
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -60,36 +69,20 @@ int main(void)
   gpio.display(true);
   sleep_ms(10);
 
-#ifdef P2SV_DISPLAY_LCD1602
-  p2sv::LCD1602 lcd1602;
-  i2c.init(0x27);
-  lcd1602.init(&i2c);
-#endif
-
-#ifdef P2SV_DISPLAY_OLED12864
-  p2sv::OLED12864 oled;
-  i2c.init(0x3c);
-  oled.init(&i2c);
-#endif
+  auto display = display_factory();
+  display->init(&i2c);
 
   adc.init();
   fft_l.init();
   fft_r.init();
   proc.init();
 
-#ifdef P2SV_DISPLAY_LCD1602
-  bars.init(SAMPLE_RATE, N_SAMPLE, LCD1602_BARS_CHN, 100, 15000);
-  lcd1602.puts("RPi pico 2");
-  lcd1602.move(1, 0);
-  lcd1602.puts("SpecVis 0.3.0");
-  sleep_ms(2000);
-#endif
+  display->splash();
 
-#ifdef P2SV_DISPLAY_OLED12864
-  bars.init(SAMPLE_RATE, N_SAMPLE, OLED12864_BARS_CHN, 100, 15000);
-  oled.level_init();
-  //oled.test_init();
-#endif
+  uint16_t bars_chn = display->num_bars_per_chn();
+  bars.init(SAMPLE_RATE, N_SAMPLE, bars_chn, 100, 15000);
+
+  display->level_init();
 
   sys.info();
 
@@ -125,15 +118,10 @@ int main(void)
     bars.equalize(bars.right());
 
     bars.mergeCenter();
-#ifdef P2SV_DISPLAY_LCD1602
-    bars.toDisplay(LCD1602_NUM_LEVELS);
-    lcd1602.level(bars.display());
-#endif
-#ifdef P2SV_DISPLAY_OLED12864
-    bars.toDisplay(OLED12864_NUM_LEVELS);
-    oled.level_loop(bars.display());
-    //oled.test_loop();
-#endif
+    bars.generate(display->num_levels());
+
+    display->level_loop(bars.display());
+
     //sys.kick_wd();
   }
 

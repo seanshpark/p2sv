@@ -51,6 +51,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #define OLED_WIDTH  128
 #define OLED_HEIGHT 64
+#define OLED_I2C_ADDR 0x3c
 
 namespace p2sv
 {
@@ -60,9 +61,10 @@ OLED12864::OLED12864() : Gfx(OLED_WIDTH, OLED_HEIGHT)
   // do nothing
 }
 
-bool OLED12864::init(I2C *i2c)
+void OLED12864::init(I2C *i2c)
 {
   _i2c = i2c;
+  _i2c->init(OLED_I2C_ADDR);
 
   size_t buffer_size = OLED_WIDTH * ((OLED_HEIGHT + 7) / 8);
   _buffer = new uint8_t[buffer_size];
@@ -74,8 +76,6 @@ bool OLED12864::init(I2C *i2c)
   init_ssd1306();
 
   _initalized = true;
-
-  return true;
 }
 
 void OLED12864::release(void)
@@ -457,6 +457,12 @@ void OLED12864::draw_fast_vline_internal(int16_t x, int16_t __y, int16_t __h, ui
   } // endif x in bounds
 }
 
+
+void OLED12864::splash(void)
+{
+  // TODO
+}
+
 void OLED12864::level_init(void)
 {
   addrMode(0);
@@ -491,7 +497,6 @@ void OLED12864::level_loop(uint16_t *bars)
 }
 
 } // namespace p2sv
-
 
 namespace p2sv
 {

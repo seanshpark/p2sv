@@ -18,7 +18,7 @@
 #define __P2SV_OLED12864_H__
 
 #include "p2sv_i2c.h"
-
+#include "p2sv_display.h"
 #include "p2sv_gfxlib.h"
 
 #define OLED12864_NUM_LEVELS 32
@@ -31,15 +31,20 @@
 namespace p2sv
 {
 
-class OLED12864 : public Gfx
+class OLED12864 : public Display, public Gfx
 {
 public:
   OLED12864();
   virtual ~OLED12864() = default;
 
 public:
-  bool init(I2C *i2c);
+  void init(I2C *i2c) override;
   void release(void);
+  void splash(void) override;
+
+public:
+  uint16_t num_bars_per_chn(void) override { return OLED12864_BARS_CHN; }
+  uint16_t num_levels(void) override { return OLED12864_NUM_LEVELS; };
 
 public:
   bool initialized(void) { return _initalized; }

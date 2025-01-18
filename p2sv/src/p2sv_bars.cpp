@@ -126,7 +126,7 @@ void Bars::mergeCenter(void)
     _bars_raw[n] = _bars_left[n - _num_bars];
 }
 
-void Bars::toDisplay(uint16_t num_levels)
+void Bars::generate(uint16_t num_levels)
 {
   for (int n = 0; n < _total_bars; n++)
   {
