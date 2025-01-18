@@ -110,7 +110,11 @@ void Bars::equalize(float *out)
 {
   for (int b = 0; b < _num_bars; ++b)
   {
-    float amp = sqrtf(_amplitudes[b]);
+#if defined(P2SV_DISPLAY_LCD1602)
+  float amp = sqrtf(_amplitudes[b]);
+#elif defined(P2SV_DISPLAY_OLED12864)
+  float amp = logf(sqrtf(_amplitudes[b]) + 1.0f);
+#endif
     out[b] = amp * _equalize[b] / (freqHi(b) - freqLo(b) + 1);
   }
 }

@@ -484,7 +484,7 @@ void OLED12864::level_loop(uint16_t *bars)
     auto lev = bars[b];
     for (uint16_t l = 0; l < lev; ++l)
     {
-      uint16_t yy = 48 - l;
+      uint16_t yy = 64 - l * 2;
       uint16_t x0 = b * 4;
       uint16_t x1 = x0 + 2;
       draw_line(x0, yy, x1, yy, 1);
