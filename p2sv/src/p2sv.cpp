@@ -10,7 +10,7 @@
 #if defined(P2SV_DISPLAY_LCD1602)
   #include "p2sv_lcd1602.h"
 #elif defined(P2SV_DISPLAY_OLED12864)
-  #include "p2sv_oled128x64.h"
+  #include "p2sv_oled12864.h"
 #else
   #error "DISPLAY NOT DEFINED"
 #endif
@@ -67,7 +67,7 @@ int main(void)
 #endif
 
 #ifdef P2SV_DISPLAY_OLED12864
-  p2sv::OLED128x64 oled;
+  p2sv::OLED12864 oled;
   i2c.init(0x3c);
   oled.init(&i2c);
 #endif

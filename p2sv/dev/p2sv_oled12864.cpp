@@ -40,7 +40,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "p2sv_oled128x64.h"
+#include "p2sv_oled12864.h"
 
 #include <iostream>
 #include <cassert>
@@ -55,12 +55,12 @@ POSSIBILITY OF SUCH DAMAGE.
 namespace p2sv
 {
 
-OLED128x64::OLED128x64() : Gfx(OLED_WIDTH, OLED_HEIGHT)
+OLED12864::OLED12864() : Gfx(OLED_WIDTH, OLED_HEIGHT)
 {
   // do nothing
 }
 
-bool OLED128x64::init(I2C *i2c)
+bool OLED12864::init(I2C *i2c)
 {
   _i2c = i2c;
 
@@ -78,7 +78,7 @@ bool OLED128x64::init(I2C *i2c)
   return true;
 }
 
-void OLED128x64::release(void)
+void OLED12864::release(void)
 {
   if (_temp_buff)
   {
@@ -104,7 +104,7 @@ void OLED128x64::release(void)
  * @return true when success
  * @return false when failed
  */
-bool OLED128x64::cmd(uint8_t v)
+bool OLED12864::cmd(uint8_t v)
 {
   _temp_buff[0] = 0x00; // command for SSD1306
   _temp_buff[1] = v;
@@ -118,7 +118,7 @@ bool OLED128x64::cmd(uint8_t v)
  * @return true when success
  * @return false when failed
  */
-bool OLED128x64::data(uint8_t v)
+bool OLED12864::data(uint8_t v)
 {
   _temp_buff[0] = 0x40; // data for SSD1306
   _temp_buff[1] = v;
@@ -126,7 +126,7 @@ bool OLED128x64::data(uint8_t v)
   return _i2c->write_buffer(_temp_buff, 2);
 }
 
-void OLED128x64::chk_resize_temp(size_t s)
+void OLED12864::chk_resize_temp(size_t s)
 {
   if (_temp_size < s + 1)
   {
@@ -147,7 +147,7 @@ void OLED128x64::chk_resize_temp(size_t s)
  * @return true when success
  * @return false when failed
  */
-bool OLED128x64::data(uint8_t *b, size_t l)
+bool OLED12864::data(uint8_t *b, size_t l)
 {
   chk_resize_temp(l);
 
@@ -158,7 +158,7 @@ bool OLED128x64::data(uint8_t *b, size_t l)
   return _i2c->write_buffer(_temp_buff, l + 1);
 }
 
-bool OLED128x64::data(uint8_t *b, uint32_t s, uint32_t l)
+bool OLED12864::data(uint8_t *b, uint32_t s, uint32_t l)
 {
   chk_resize_temp(l);
 
@@ -169,7 +169,7 @@ bool OLED128x64::data(uint8_t *b, uint32_t s, uint32_t l)
   return _i2c->write_buffer(_temp_buff, l + 1);
 }
 
-bool OLED128x64::addrMode(uint8_t v)
+bool OLED12864::addrMode(uint8_t v)
 {
   if (v >= 3)
     return false;
@@ -180,7 +180,7 @@ bool OLED128x64::addrMode(uint8_t v)
   return true;
 }
 
-bool OLED128x64::colAddr(uint8_t s, uint8_t e)
+bool OLED12864::colAddr(uint8_t s, uint8_t e)
 {
   if (s > e)
     return false;
@@ -194,7 +194,7 @@ bool OLED128x64::colAddr(uint8_t s, uint8_t e)
   return true;
 }
 
-bool OLED128x64::pageAddr(uint8_t s, uint8_t e)
+bool OLED12864::pageAddr(uint8_t s, uint8_t e)
 {
   if (s > e)
     return false;
@@ -208,13 +208,13 @@ bool OLED128x64::pageAddr(uint8_t s, uint8_t e)
   return true;
 }
 
-void OLED128x64::clear()
+void OLED12864::clear()
 {
   clear_display();
   flush_display();
 }
 
-void OLED128x64::init_ssd1306(void)
+void OLED12864::init_ssd1306(void)
 {
   // https://github.com/iliapenev/ssd1306_i2c/blob/master/ssd1306_i2c.c
 
@@ -264,12 +264,12 @@ void OLED128x64::init_ssd1306(void)
   cmd(0xAF); // SSD1306_DISPLAYON
 }
 
-void OLED128x64::clear_display(void)
+void OLED12864::clear_display(void)
 {
   memset(_buffer, 0, OLED_WIDTH * ((OLED_HEIGHT + 7) / 8));
 }
 
-void OLED128x64::flush_display(void)
+void OLED12864::flush_display(void)
 {
   size_t data_size = OLED_WIDTH * ((OLED_HEIGHT + 7) / 8);
   _temp_buff[0] = 0x40; // data for SSD1306
@@ -277,7 +277,7 @@ void OLED128x64::flush_display(void)
   _i2c->write_buffer(_temp_buff, 1 + data_size);
 }
 
-void OLED128x64::draw_pixel(int16_t x, int16_t y, uint16_t color)
+void OLED12864::draw_pixel(int16_t x, int16_t y, uint16_t color)
 {
   if ((x >= 0) && (x < width()) && (y >= 0) && (y < height()))
   {
@@ -298,17 +298,17 @@ void OLED128x64::draw_pixel(int16_t x, int16_t y, uint16_t color)
   }
 }
 
-void OLED128x64::draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t color)
+void OLED12864::draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t color)
 {
   draw_fast_hline_internal(x, y, w, color);
 }
 
-void OLED128x64::draw_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t color)
+void OLED12864::draw_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t color)
 {
   draw_fast_vline_internal(x, y, h, color);
 }
 
-void OLED128x64::draw_fast_hline_internal(int16_t x, int16_t y, int16_t w, uint16_t color)
+void OLED12864::draw_fast_hline_internal(int16_t x, int16_t y, int16_t w, uint16_t color)
 {
   if ((y >= 0) && (y < OLED_HEIGHT)) // Y coord in bounds?
   {
@@ -350,7 +350,7 @@ void OLED128x64::draw_fast_hline_internal(int16_t x, int16_t y, int16_t w, uint1
   }
 }
 
-void OLED128x64::draw_fast_vline_internal(int16_t x, int16_t __y, int16_t __h, uint16_t color)
+void OLED12864::draw_fast_vline_internal(int16_t x, int16_t __y, int16_t __h, uint16_t color)
 {
   if ((x >= 0) && (x < OLED_WIDTH)) // X coord in bounds?
   {
@@ -457,7 +457,7 @@ void OLED128x64::draw_fast_vline_internal(int16_t x, int16_t __y, int16_t __h, u
   } // endif x in bounds
 }
 
-void OLED128x64::level_init(void)
+void OLED12864::level_init(void)
 {
   addrMode(0);
   pageAddr(0x00, 0x07);
@@ -465,7 +465,7 @@ void OLED128x64::level_init(void)
   clear();
 }
 
-void OLED128x64::level_loop(uint16_t *bars)
+void OLED12864::level_loop(uint16_t *bars)
 {
   clear_display();
 
@@ -496,7 +496,7 @@ void OLED128x64::level_loop(uint16_t *bars)
 namespace p2sv
 {
 
-void OLED128x64::test_init(void)
+void OLED12864::test_init(void)
 {
   addrMode(0);
   pageAddr(0x00, 0x07);
@@ -509,7 +509,7 @@ void OLED128x64::test_init(void)
   _test_c = 1;
 }
 
-void OLED128x64::test_loop(void)
+void OLED12864::test_loop(void)
 {
   if (_test_line_x && _test_xy == 0)
   {

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef __P2SV_OLED128X64_H__
-#define __P2SV_OLED128X64_H__
+#ifndef __P2SV_OLED12864_H__
+#define __P2SV_OLED12864_H__
 
 #include "p2sv_i2c.h"
 
@@ -31,11 +31,11 @@
 namespace p2sv
 {
 
-class OLED128x64 : public Gfx
+class OLED12864 : public Gfx
 {
 public:
-  OLED128x64();
-  virtual ~OLED128x64() = default;
+  OLED12864();
+  virtual ~OLED12864() = default;
 
 public:
   bool init(I2C *i2c);
@@ -99,4 +99,4 @@ private:
 
 } // namespace p2sv
 
-#endif // __P2SV_OLED128X64_H__
+#endif // __P2SV_OLED12864_H__
