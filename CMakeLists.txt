@@ -33,5 +33,16 @@ project(p2sv C CXX ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+# set one of "LCD1602", "OLED12864"
+#set(P2SV_DISPLAY_DEVICE "LCD1602")
+set(P2SV_DISPLAY_DEVICE "OLED12864")
+
+if(P2SV_DISPLAY_DEVICE STREQUAL "LCD1602")
+    set(P2SV_DISPLAY_LCD1602 ON)
+endif()
+if(P2SV_DISPLAY_DEVICE STREQUAL "OLED12864")
+    set(P2SV_DISPLAY_OLED12864 ON)
+endif()
+
 add_subdirectory(libs)
 add_subdirectory(p2sv)

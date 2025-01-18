@@ -4,6 +4,9 @@
 #include "p2sv_sys.h"
 #include "p2sv_i2c.h"
 
+#define LCD1602_NUM_LEVELS 16
+#define LCD1602_BARS_CHN 8
+
 namespace p2sv
 {
 

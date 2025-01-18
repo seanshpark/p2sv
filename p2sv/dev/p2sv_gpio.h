@@ -12,7 +12,7 @@ public:
   void init(void);
 
 public:
-  void lcd1602(bool on);
+  void display(bool on);
 
 public:
   void blink0(bool set);

@@ -13,6 +13,7 @@ public:
 
 public:
   void write(uint8_t one);
+  bool write_buffer(uint8_t *b, size_t s);
 
 private:
   uint8_t _addr = 0x00;

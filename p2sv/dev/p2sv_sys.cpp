@@ -18,4 +18,14 @@ void System::info(void)
   // For more examples of clocks use see https://github.com/raspberrypi/pico-examples/tree/master/clocks
 }
 
+void System::enable_wd(void)
+{
+  watchdog_enable(100, 1);
+}
+
+void System::kick_wd(void)
+{
+  watchdog_update();
+}
+
 } // namespace p2sv

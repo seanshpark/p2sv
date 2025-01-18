@@ -2,11 +2,18 @@
 #include "p2sv_sys.h"
 #include "p2sv_gpio.h"
 #include "p2sv_i2c.h"
-#include "p2sv_lcd1602.h"
 #include "p2sv_adc.h"
 #include "p2sv_fft.h"
 #include "p2sv_proc.h"
 #include "p2sv_bars.h"
+
+#if defined(P2SV_DISPLAY_LCD1602)
+  #include "p2sv_lcd1602.h"
+#elif defined(P2SV_DISPLAY_OLED12864)
+  #include "p2sv_oled128x64.h"
+#else
+  #error "DISPLAY NOT DEFINED"
+#endif
 
 #include <cstdlib>
 #include <cmath>
@@ -37,38 +44,54 @@ int main(void)
 {
   p2sv::System sys;
   p2sv::GPIO gpio;
-  p2sv::I2C i2c;
-  p2sv::LCD1602 lcd1602;
   p2sv::ADC adc;
   p2sv::FFT fft_l;
   p2sv::FFT fft_r;
   p2sv::Proc proc;
   p2sv::Bars bars;
+  p2sv::I2C i2c;
 
   sys.init();
   gpio.init();
 
-  // to reset lcd1602, power off-on
-  gpio.lcd1602(false);
+  // to reset display(LCD1602), power off-on
+  gpio.display(false);
   sleep_ms(200);
-  gpio.lcd1602(true);
+  gpio.display(true);
   sleep_ms(10);
 
+#ifdef P2SV_DISPLAY_LCD1602
+  p2sv::LCD1602 lcd1602;
   i2c.init(0x27);
   lcd1602.init(&i2c);
+#endif
+
+#ifdef P2SV_DISPLAY_OLED12864
+  p2sv::OLED128x64 oled;
+  i2c.init(0x3c);
+  oled.init(&i2c);
+#endif
 
   adc.init();
   fft_l.init();
   fft_r.init();
   proc.init();
-  bars.init(SAMPLE_RATE, N_SAMPLE, LCD1602_BARS_CHN, 100, 15000);
-  sys.info();
 
-  // show info
+#ifdef P2SV_DISPLAY_LCD1602
+  bars.init(SAMPLE_RATE, N_SAMPLE, LCD1602_BARS_CHN, 100, 15000);
   lcd1602.puts("RPi pico 2");
   lcd1602.move(1, 0);
-  lcd1602.puts("SpecVis 0.2.0");
+  lcd1602.puts("SpecVis 0.3.0");
   sleep_ms(2000);
+#endif
+
+#ifdef P2SV_DISPLAY_OLED12864
+  bars.init(SAMPLE_RATE, N_SAMPLE, OLED12864_BARS_CHN, 100, 15000);
+  oled.level_init();
+  //oled.test_init();
+#endif
+
+  sys.info();
 
   // blinking on-board LED to show alive
   repeating_timer_t rt;
@@ -78,6 +101,7 @@ int main(void)
   ud.led = true;
   alarm_pool_add_repeating_timer_ms(pool, 500, alaram_repeating_cb, &ud, &rt);
 
+  //sys.enable_wd();
   while (true)
   {
     // capture ADC left and right
@@ -101,9 +125,16 @@ int main(void)
     bars.equalize(bars.right());
 
     bars.mergeCenter();
+#ifdef P2SV_DISPLAY_LCD1602
     bars.toDisplay(LCD1602_NUM_LEVELS);
-
     lcd1602.level(bars.display());
+#endif
+#ifdef P2SV_DISPLAY_OLED12864
+    bars.toDisplay(OLED12864_NUM_LEVELS);
+    oled.level_loop(bars.display());
+    //oled.test_loop();
+#endif
+    //sys.kick_wd();
   }
 
   return 0;

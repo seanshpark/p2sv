@@ -2,9 +2,21 @@ set(P2SV_DEV_FILES
     dev/p2sv_sys.cpp
     dev/p2sv_adc.cpp
     dev/p2sv_i2c.cpp
-    dev/p2sv_lcd1602.cpp
     dev/p2sv_gpio.cpp
 )
+if (P2SV_DISPLAY_LCD1602)
+    list(APPEND P2SV_DEV_FILES
+        dev/p2sv_lcd1602.cpp
+    )
+    add_definitions(-DP2SV_DISPLAY_LCD1602)
+endif()
+if (P2SV_DISPLAY_OLED12864)
+    list(APPEND P2SV_DEV_FILES
+        dev/p2sv_gfxlib.cpp
+        dev/p2sv_oled128x64.cpp
+    )
+    add_definitions(-DP2SV_DISPLAY_OLED12864)
+endif()
 
 set(P2SV_SRC_FILES
     src/p2sv.cpp
@@ -16,7 +28,7 @@ set(P2SV_SRC_FILES
 add_executable(p2sv ${P2SV_SRC_FILES} ${P2SV_DEV_FILES})
 
 pico_set_program_name(p2sv "p2sv")
-pico_set_program_version(p2sv "0.1")
+pico_set_program_version(p2sv "0.3.0")
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(p2sv 1)

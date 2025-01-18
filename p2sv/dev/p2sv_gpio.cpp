@@ -7,15 +7,15 @@ namespace p2sv
 void GPIO::init(void)
 {
   gpio_init(PICO_DEFAULT_LED_PIN);
-  gpio_init(LCD1602_PWR_CTRL);
+  gpio_init(DISPLAY_PWR_CTRL);
 
   gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
-  gpio_set_dir(LCD1602_PWR_CTRL, GPIO_OUT);
+  gpio_set_dir(DISPLAY_PWR_CTRL, GPIO_OUT);
 }
 
-void GPIO::lcd1602(bool on)
+void GPIO::display(bool on)
 {
-  gpio_put(LCD1602_PWR_CTRL, on);
+  gpio_put(DISPLAY_PWR_CTRL, on);
 }
 
 void GPIO::blink0(bool set)

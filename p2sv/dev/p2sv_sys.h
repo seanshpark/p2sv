@@ -11,6 +11,7 @@
 #include <hardware/clocks.h>
 #include <hardware/adc.h>
 #include <hardware/dma.h>
+#include <hardware/watchdog.h>
 
 namespace p2sv
 {
@@ -22,6 +23,10 @@ public:
 
 public:
   void info(void);
+
+public:
+  void enable_wd(void);
+  void kick_wd(void);
 };
 
 } // namespace p2sv
