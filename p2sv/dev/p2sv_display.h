@@ -3,6 +3,8 @@
 
 #include "p2sv_i2c.h"
 
+#include <memory>
+
 namespace p2sv
 {
 
@@ -19,6 +21,8 @@ public:
   virtual uint16_t num_bars_per_chn(void) = 0;
   virtual uint16_t num_levels(void) = 0;
 };
+
+std::unique_ptr<p2sv::Display> create_display(void);
 
 } // namespace p2sv
 

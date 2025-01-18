@@ -22,6 +22,10 @@ public:
   uint16_t num_levels(void) override { return LCD1602_NUM_LEVELS; };
 
 public:
+  void level_init(void) override;
+  void level_loop(uint16_t *) override;
+
+public:
   void clear();
   void home();
   void display(bool enable); // display on/off
@@ -31,9 +35,6 @@ public:
   void putch(uint8_t ch);
   void move(uint8_t row, uint8_t col);
   void cgram(uint8_t ch, uint8_t *data, size_t leng);
-
-  void level_init(void) override;
-  void level_loop(uint16_t *) override;
 
 private:
   void function_set(uint8_t data);

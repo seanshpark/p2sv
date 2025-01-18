@@ -47,6 +47,10 @@ public:
   uint16_t num_levels(void) override { return OLED12864_NUM_LEVELS; };
 
 public:
+  void level_init(void) override;
+  void level_loop(uint16_t *bars) override;
+
+public:
   bool initialized(void) { return _initalized; }
 
 public:
@@ -85,10 +89,6 @@ private:
   uint8_t *_temp_buff = nullptr;
   uint32_t _temp_size = 0;
   bool _initalized = false;
-
-public:
-  void level_init(void);
-  void level_loop(uint16_t *bars);
 
 public:
   void test_init(void);

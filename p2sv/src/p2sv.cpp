@@ -37,16 +37,6 @@ bool alaram_repeating_cb(repeating_timer_t *rt)
   return true;
 }
 
-std::unique_ptr<p2sv::Display> display_factory(void)
-{
-#if defined(P2SV_DISPLAY_LCD1602)
-  return std::make_unique<p2sv::LCD1602>();
-#endif
-#if defined(P2SV_DISPLAY_OLED12864)
-  return std::make_unique<p2sv::OLED12864>();
-#endif
-}
-
 //------------------------------------------------------------------------------
 
 int main(void)
@@ -69,7 +59,7 @@ int main(void)
   gpio.display(true);
   sleep_ms(10);
 
-  auto display = display_factory();
+  auto display = p2sv::create_display();
   display->init(&i2c);
 
   adc.init();

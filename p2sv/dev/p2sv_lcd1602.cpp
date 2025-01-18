@@ -363,4 +363,9 @@ void LCD1602::io_send_byte(uint8_t one)
   _i2c->write(one);
 }
 
+std::unique_ptr<p2sv::Display> create_display(void)
+{
+  return std::make_unique<p2sv::LCD1602>();
+}
+
 } // namespace p2sv

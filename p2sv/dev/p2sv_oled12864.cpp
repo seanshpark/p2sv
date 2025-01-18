@@ -496,6 +496,11 @@ void OLED12864::level_loop(uint16_t *bars)
   flush_display();
 }
 
+std::unique_ptr<p2sv::Display> create_display(void)
+{
+  return std::make_unique<p2sv::OLED12864>();
+}
+
 } // namespace p2sv
 
 namespace p2sv
