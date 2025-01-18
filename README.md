@@ -17,12 +17,12 @@ Used this simple circuit to do so:
 
 <img src="docs/audio_adc_level.png">
 
-Youtube demo video for LCD 16 characters 2 lines:
+Youtube demo video with LCD 16 characters 2 lines:
 
 [![demo video](http://i.ytimg.com/vi/k9Akgbx1h0w/hqdefault.jpg)](https://www.youtube.com/watch?v=k9Akgbx1h0w)
 
 
-Youtube demo video for OLED 128x64:
+Youtube demo video with OLED 128x64:
 
 [![YouTube](http://i.ytimg.com/vi/okPapBplkcM/hqdefault.jpg)](https://www.youtube.com/watch?v=okPapBplkcM)
 
