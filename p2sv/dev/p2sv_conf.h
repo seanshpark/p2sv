@@ -24,4 +24,9 @@
 #define DISPLAY_I2C_SDA 12
 #define DISPLAY_I2C_SCL 13
 
+// MAX7219 pins
+#define MAX7219_DIO 2
+#define MAX7219_CS 3
+#define MAX7219_CLK 4
+
 #endif // __P2SV_CONF_H__

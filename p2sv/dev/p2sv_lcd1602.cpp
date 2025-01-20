@@ -224,8 +224,8 @@ void LCD1602::level_init(void)
   Draw bars to LCD1602 
   'bars' must have 16 items with value of 0 ~ 16
 */
-void LCD1602::level_loop(uint16_t *bars)
-{
+  void LCD1602::level_loop(uint16_t *bars)
+  {
   uint16_t num = 16;
   char row0[20];
   char row1[20];

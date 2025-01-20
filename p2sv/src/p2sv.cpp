@@ -11,6 +11,8 @@
   #include "p2sv_lcd1602.h"
 #elif defined(P2SV_DISPLAY_OLED12864)
   #include "p2sv_oled12864.h"
+#elif defined(P2SV_DISPLAY_LEDDOT328)
+  #include "p2sv_leddot328.h"
 #else
   #error "DISPLAY NOT DEFINED"
 #endif

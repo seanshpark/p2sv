@@ -17,6 +17,12 @@ if (P2SV_DISPLAY_OLED12864)
     )
     add_definitions(-DP2SV_DISPLAY_OLED12864)
 endif()
+if (P2SV_DISPLAY_LEDDOT328)
+    list(APPEND P2SV_DEV_FILES
+        dev/p2sv_leddot328.cpp
+    )
+    add_definitions(-DP2SV_DISPLAY_LEDDOT328)
+endif()
 
 set(P2SV_SRC_FILES
     src/p2sv.cpp
