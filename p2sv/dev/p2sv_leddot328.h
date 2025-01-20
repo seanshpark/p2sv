@@ -6,8 +6,8 @@
 #include "p2sv_conf.h"
 #include "p2sv_display.h"
 
-#define LEDDOT328_NUM_LEVELS 16
-#define LEDDOT328_BARS_CHN 8
+#define LEDDOT328_NUM_LEVELS 8
+#define LEDDOT328_BARS_CHN 16
 
 namespace p2sv
 {
@@ -19,8 +19,8 @@ public:
   void splash(void) override;
 
 public:
-  uint16_t num_bars_per_chn(void) override { return LEDDOT328_NUM_LEVELS; }
-  uint16_t num_levels(void) override { return LEDDOT328_BARS_CHN; };
+  uint16_t num_bars_per_chn(void) override { return LEDDOT328_BARS_CHN; }
+  uint16_t num_levels(void) override { return LEDDOT328_NUM_LEVELS; };
 
 public:
   void level_init(void) override;

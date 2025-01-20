@@ -129,7 +129,7 @@ void Bars::mergeCenter(void)
   for (int n = 0; n < _num_bars; n++)
     _bars_raw[n] = _bars_left[_num_bars - n - 1];
   for (int n = _num_bars; n < _total_bars; n++)
-    _bars_raw[n] = _bars_left[n - _num_bars];
+    _bars_raw[n] = _bars_right[n - _num_bars];
 }
 
 void Bars::generate(uint16_t num_levels)
