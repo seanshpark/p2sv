@@ -19,12 +19,15 @@ Used this simple circuit to do so:
 
 Youtube demo video with LCD 16 characters 2 lines:
 
-[![demo video](http://i.ytimg.com/vi/k9Akgbx1h0w/hqdefault.jpg)](https://www.youtube.com/watch?v=k9Akgbx1h0w)
-
+[![LCD1602](http://i.ytimg.com/vi/k9Akgbx1h0w/hqdefault.jpg)](https://www.youtube.com/watch?v=k9Akgbx1h0w)
 
 Youtube demo video with OLED 128x64:
 
-[![YouTube](http://i.ytimg.com/vi/okPapBplkcM/hqdefault.jpg)](https://www.youtube.com/watch?v=okPapBplkcM)
+[![OLED128x64](http://i.ytimg.com/vi/okPapBplkcM/hqdefault.jpg)](https://www.youtube.com/watch?v=okPapBplkcM)
+
+Youtube demo video with LED 32x8:
+
+[![LED32x8](http://i.ytimg.com/vi/Sz2ba43FdY0/hqdefault.jpg)](https://www.youtube.com/watch?v=Sz2ba43FdY0)
 
 ## SDK version
 
